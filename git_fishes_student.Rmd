@@ -17,7 +17,7 @@ options(digits=2)
 ```
 
 # **Introduction**
-lkadjklajkldjak;jdk;jak;dj;ajdjajdajdljajdljaddjkl
+
 This tutorial will draw on the skills you have already learnt on data visualisation, data wrangling and NHST to analyse a data set on ocean acidification effects on fish behaviour. However, we'll do that in the context of some new workflows that adopt Git and GitHub. 
 
 Use this Rmarkdown file as your template to complete the tasks outlined within the instructions. There are questions asked in the instructions and here in the RMarkdown file. Answer these as best as you can to document your steps and thinking. There are also a series of coding exercises. 
@@ -51,8 +51,8 @@ This task involves cloning your repository on your computer. Where should we pla
 
 >**Question 1**: Why should you not rely on *GitHub* as a backup?
 
-```{r, answer1, echo=T, eval = FALSE}
-## GitHub is not a backup because it only keeps records of my file rather than a copy"
+```{r answer1, echo=T, eval = FALSE}
+## GitHub is not a backup because it focuses on displaying the records of changing details rather than a copy. Also, it needs to be summited or pulling down manually, instead of automatically saving backup in couple of minutes like other cloud storage system.
 ```
 
 I'd usually suggest placing your repo in a cloud storage system like, *OneDrive*, *Dropbox*, or *GoogleDrive*. These will ensure that all your files are backed up and *GitHub* will provide a record of the detailed history. 
@@ -62,7 +62,7 @@ Before moving on you might have noticed that the code block above has a name `an
 >**Question 2**: In the second code block called `answer1` if we change echo = TRUE to echo = FALSE what will happen to the code block `answer1` when you render it?
 
 ```{r answer2, echo=TRUE, eval = FALSE}
-## 
+## The code will not be shown if echo=FALSE.
 ```
 
 **Important**: Notice that `eval = FALSE` for many code chunks. When you complete the tasks. Make sure to change these to `TRUE` otherwise you will find your code does not run!
