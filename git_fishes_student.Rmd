@@ -125,21 +125,26 @@ Second, drop out irrelevant columns and check that there are no spelling issues 
 
 ```{r summaryTab}
 # Drop irrelevant columns
-data_clean <- select(data_no_NA,-loc,-comment)
+data_no_irrelevant_columns <- select(data_no_NA,-loc,-comment)
 
 # Check spelling in species and treatment but also generate a summary table
-table(data_clean$species)
-table(data_clean$treatment)
-
-sl_mean <- mean(data_clean$sl)
-activity_mean <- mean(data_clean$activity)
-sl_se <- var(data_clean$sl)
-activity_se <- var(data_clean$activity)
-acantho_control <- sum(data_clean %>% filter(species == "acantho", treatment == "CO2"))
+## check spelling issues: if there is a spelling error, it will form a new column by itself.
+table(data_no_irrelevant_columns$species)
+table(data_no_irrelevant_columns$treatment)
+## calculate the mean and the standard error
+sl_mean <- mean(data_no_irrelevant_columns$sl)
+activity_mean <- mean(data_no_irrelevant_columns$activity)
+sl_se <- var(data_no_irrelevant_columns$sl)
+activity_se <- var(data_no_irrelevant_columns$activity)
+## the sample sizes of unique fish across ALL six fish species for each treatment
+sample_size_per_species <- with(data_no_irrelevant_columns %>% group_by(species, treatment), table(species,treatment))
+## Create a table of summary data
+data_clean <- data_no_irrelevant_columns %>% group_by(species, treatment) %>% mutate(sample_size = length(sl), mean_sl = sl_mean, standared_error_sl = sl_se, mean_activity = activity_mean, standared_error_activity = activity_se)
+data_clean <- select(data_clean,-1,-animal_id,-sl,-size,-activity)
+summary_data <- setorder(unique(data_clean), species, treatment)
 
 # Use flextable to render the summary table in a tidy format
-
-
+flextable(summary_data)
 ```
 
 **STOP**: Before moving on, it's a good time to establish some good *GitHub* practices. You have just done an important step. It's time to save this file, stage it and commit it so that you have a record. Push these changes up using *GitHub Desktop*. It's important to do this frequently. It's probably not needed after every line of code, but it's good to do this when you have completed an important coding step. Of course, there's no harm in doing it more often. It will provide fine-scale tracking for you!
