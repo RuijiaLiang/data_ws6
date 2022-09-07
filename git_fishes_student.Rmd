@@ -231,7 +231,7 @@ plot_chromis <- ggplot(data_clean%>%filter(species=="chromis"),aes(x=treatment,y
 pic_lemon <- readPNG('./pics/lemon.png')
 plot_lemon <- ggplot(data_clean%>%filter(species=="lemon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean_activity_of_lemon")
 
-## ACantho
+## acantho
 pic_acantho <- readPNG('./pics/acantho.png')
 plot_acantho <- ggplot(data_clean%>%filter(species=="acantho"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean_activity_of_acantho")
 ```
