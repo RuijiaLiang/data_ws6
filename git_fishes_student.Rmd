@@ -101,7 +101,7 @@ Let's say that you added a new data folder that was inside an output folder (i.e
 
 >**Question 4**: Using the `write_csv` function how would you write the path name to save this file to `output/data`?
 
-```{r, write, eval = FALSE, echo=TRUE}
+```{r, write, eval = T, echo=TRUE}
 
 path <- "./data/OA_activitydat_20190302_BIOL3207.csv"
 
@@ -135,7 +135,7 @@ table(data_no_irrelevant_columns$treatment)
 ## the sample sizes of unique fish across ALL six fish species for each treatment
 sample_size_per_species <- with(data_no_irrelevant_columns %>% group_by(species, treatment), table(species,treatment))
 ## Create a table of summary data
-data_clean <- data_no_irrelevant_columns %>% group_by(species, treatment) %>% mutate(sample_size = length(activity),  mean_activity = mean(activity), standard_error_activity = var(activity))
+data_clean <- data_no_irrelevant_columns %>% group_by(species, treatment) %>% mutate(sample_size = length(activity),  mean_activity = mean(activity), standard_error_activity = sd(activity)/sqrt(length(activity)))
 data_clean <- select(data_clean,-1,-animal_id,-sl,-size,-activity)
 summary_data <- setorder(unique(data_clean), species, treatment)
 
@@ -222,6 +222,18 @@ Now, lets create a new figure in the code block below that simplifies the one pr
 
 ```{r, collabFig, echo=TRUE, eval=TRUE}
 # You want to make changes to your collaborators figure in Task 5. Maybe you want to create a figure that focuses only on three fish species instead of the 5. More specifically, chromis, lemon, and acantho. Add code here to revise their figure to do that.
+
+## chromis
+pic_chromis <- readPNG('./pics/chromis.png')
+plot_chromis <- ggplot(data_clean%>%filter(species=="chromis"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean_activity_of_chromis")
+
+## lemon
+pic_lemon <- readPNG('./pics/lemon.png')
+plot_lemon <- ggplot(data_clean%>%filter(species=="lemon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean_activity_of_lemon")
+
+## acantho
+pic_acantho <- readPNG('./pics/acantho.png')
+plot_acantho <- ggplot(data_clean%>%filter(species=="acantho"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean_activity_of_acantho")
 ```
 
 
