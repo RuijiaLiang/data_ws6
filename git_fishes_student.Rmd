@@ -26,7 +26,7 @@ Throughout we are also going to learn a bit more about how to format Rmarkdown d
 
 ```{r loadpacks, message=FALSE, results='hide'}
 # Install a load of packages that we'll use. I'll show you a shortcut that I love to use. Try using the p_load function in the "pacman" package. p_load will execute both the install.packages and library commands in one shot so they only need to be used once to install pacman itself.
-install.packages("pacman", repos = "http://cran.us.r-project.org")
+
 library(pacman)
 
 # Install bookdown for rendering because we'll need this. While we're at it, lets also install /load the tidyverse
@@ -124,6 +124,7 @@ data_no_NA <- data[complete.cases(data),]
 Second, drop out irrelevant columns and check that there are no spelling issues in `species` and `treatment`. Create a table of summary data that includes: 1) the mean, 2) the standard error and 3) the sample sizes of unique fish across ALL six fish species for each treatment. This will also help you detect any spelling errors. You can use the R package [`flextable`](https://ardata-fr.github.io/flextable-book/) to print out the results in a nice neat format! If you haven't heard about `flextable` spend 10 or so minutes having a look at it's functionality. It's incredible! You'll use this for tables throughout.
 
 ```{r summaryTab}
+library(data.table)
 # Drop irrelevant columns
 data_no_irrelevant_columns <- select(data_no_NA,-loc,-comment)
 
@@ -134,7 +135,7 @@ table(data_no_irrelevant_columns$treatment)
 ## the sample sizes of unique fish across ALL six fish species for each treatment
 sample_size_per_species <- with(data_no_irrelevant_columns %>% group_by(species, treatment), table(species,treatment))
 ## Create a table of summary data
-data_clean <- data_no_irrelevant_columns %>% group_by(species, treatment) %>% mutate(sample_size = length(sl), mean_sl = mean(sl), standard_error_sl = var(sl), mean_activity = mean(activity), standard_error_activity = var(activity))
+data_clean <- data_no_irrelevant_columns %>% group_by(species, treatment) %>% mutate(sample_size = length(activity),  mean_activity = mean(activity), standard_error_activity = var(activity))
 data_clean <- select(data_clean,-1,-animal_id,-sl,-size,-activity)
 summary_data <- setorder(unique(data_clean), species, treatment)
 
@@ -211,7 +212,7 @@ Last question for this task. I promise! It's important to think very carefully a
 >**Question 7**: Assume that you added the `pics/` folder to your working directory to plot pictures of each fish on your figure. Do you want to track the files in the pic/ folder on GitHub despite them being .png files? Explain your reasoning. 
 
 ```{r, answer6}
-## Maybe it is better if we track those PNG files because they are the source, like fundamental material, of what the previous code are using and also when working with others, others can see them too.
+## Maybe it is better if we track those PNG files because they are the source, like fundamental material, of what the previous code are based on and also when working with others, others can see them too.
 ```
 
 # **Task 6**
@@ -256,16 +257,55 @@ Here, run some statistical tests to determine, for each species, whether the con
 >**Stretch Task**: You can of course do this for each species seperately, but those who want a challenge, think about how you might use a loop or even some wrangling methods you have already learnt from the tidyverse to run these tests across all 6 species in a single block of code. If you're familiar with functions, you can even think about writing your own function! All these strategies will avoid having to copy and paste large chunks of code. If you're repeating anything, writing functions and loops are good ways to simplify.
 
 ```{r, stats, echo=TRUE, eval=TRUE}
-# Add your code here
+## acantho
+acantho_t <- data_no_irrelevant_columns%>%filter(species=="acantho", treatment=="CO2")
+acantho_c <- data_no_irrelevant_columns%>%filter(species=="acantho", treatment=="control")
+acantho_t_test <- t.test(acantho_t$activity,acantho_c$activity, var.equal = T)
+
+## ambon
+ambon_t <- data_no_irrelevant_columns%>%filter(species=="ambon", treatment=="CO2")
+ambon_c <- data_no_irrelevant_columns%>%filter(species=="ambon", treatment=="control")
+ambon_t_test <- t.test(ambon_t$activity,ambon_c$activity, var.equal = T)
+
+## chromis
+chromis_t <- data_no_irrelevant_columns%>%filter(species=="chromis", treatment=="CO2")
+chromis_c <- data_no_irrelevant_columns%>%filter(species=="chromis", treatment=="control")
+chromis_t_test <- t.test(chromis_t$activity,chromis_c$activity, var.equal = T)
+
+## humbug
+humbug_t <- data_no_irrelevant_columns%>%filter(species=="humbug", treatment=="CO2")
+humbug_c <- data_no_irrelevant_columns%>%filter(species=="humbug", treatment=="control")
+humbug_t_test <- t.test(humbug_t$activity,humbug_c$activity, var.equal = T)
+
+## lemon
+lemon_t <- data_no_irrelevant_columns%>%filter(species=="lemon", treatment=="CO2")
+lemon_c <- data_no_irrelevant_columns%>%filter(species=="lemon", treatment=="control")
+lemon_t_test <- t.test(lemon_t$activity,lemon_c$activity, var.equal = T)
+
+## whitedams
+whitedams_t <- data_no_irrelevant_columns%>%filter(species=="whitedams", treatment=="CO2")
+whitedams_c <- data_no_irrelevant_columns%>%filter(species=="whitedams", treatment=="control")
+whitedams_t_test <- t.test(whitedams_t$activity,whitedams_c$activity, var.equal = T)
 ```
 
-```{r, table1, echo=TRUE, eval=TRUE, tab.cap = "write a caption here"}
+```{r, table1, echo=TRUE, eval=TRUE, tab.cap = "summary table of the t test results of the six species"}
 # Using the resulting object created above, which should be a table with all the summary statistics, t, df and p-value for each species create a table. Note that there is a tab.cap argument in the chunk arguments. Write a caption here. 
+
+only_statistics_table <- data.frame(
+  t = c(acantho_t_test$statistic,ambon_t_test$statistic,chromis_t_test$statistic,humbug_t_test$statistic,lemon_t_test$statistic,whitedams_t_test$statistic),
+  df = c(acantho_t_test$parameter,ambon_t_test$parameter,chromis_t_test$parameter,humbug_t_test$parameter,lemon_t_test$parameter,whitedams_t_test$parameter),
+  p_value = c(acantho_t_test$p.value,ambon_t_test$p.value,chromis_t_test$p.value,humbug_t_test$p.value,lemon_t_test$p.value,whitedams_t_test$p.value))
+
+species_statistics_table <- only_statistics_table %>% mutate(species = c("acantho","ambon","chromis","humbug","lemon","whitedams")) %>% select(species,t,df,p_value)
+
+species_statistics_flextable <- flextable(species_statistics_table)
 ```
 
 Now that you have a table, you can reference it within a document. For example, you can make a call to Table \@ref(tab:table1) by referring to the name of the code chunk. When you knit the html it will create a hyperlink to your table and insert a legend above the table for you. How cool is that!?
 
-> **Question 8**: Pick one of your favorite species and write about the results to a reader. Write in the Rmarkdown file below what 1) the means and mean differences between control and acidification treatment is along with 2) the 95% confidence intervals of the difference
+> **Question 8**: Pick one of your favorite species and write about the results to a reader. Write in the Rmarkdown file below what 
+1) the means and mean differences between control and acidification treatment is along with 
+2) the 95% confidence intervals of the difference
 
 You can write your blurb below this. Before you do that, a few cool features of Rmarkdown. You can actually code in objects so that, when they are rendered they replace the inline code chunk with the result. To give you an example, an inline code chunk is written as follows: `r "add code here"`. When you render the document, whatever you place in the "add code here" section will be rendered. In this case, we are giving a string, so it simply just adds that in the place where the code is, render and see for yourself.  
 
