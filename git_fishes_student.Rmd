@@ -177,27 +177,27 @@ ggsave('./output/figures/mean activity of acantho.png', )
 
 ## ambon
 pic_ambon <- readPNG('./pics/ambon.png')
-plot_ambon <- ggplot(data_clean%>%filter(species=="ambon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of ambon")
+plot_ambon <- ggplot(data_clean%>%filter(species=="ambon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_ambon, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of ambon")
 ggsave('./output/figures/mean activity of ambon.png', )
 
 ## chromis
 pic_chromis <- readPNG('./pics/chromis.png')
-plot_chromis <- ggplot(data_clean%>%filter(species=="chromis"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of chromis")
+plot_chromis <- ggplot(data_clean%>%filter(species=="chromis"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_chromis, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of chromis")
 ggsave('./output/figures/mean activity of chromis.png', )
 
 ## humbug
 pic_humbug <- readPNG('./pics/humbug.png')
-plot_humbug <- ggplot(data_clean%>%filter(species=="humbug"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of humbug")
+plot_humbug <- ggplot(data_clean%>%filter(species=="humbug"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_humbug, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of humbug")
 ggsave('./output/figures/mean activity of humbug.png', )
 
 ## lemon
 pic_lemon <- readPNG('./pics/lemon.png')
-plot_lemon <- ggplot(data_clean%>%filter(species=="lemon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of lemon")
+plot_lemon <- ggplot(data_clean%>%filter(species=="lemon"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_lemon, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of lemon")
 ggsave('./output/figures/mean activity of lemon.png', )
 
 ## whitedams
 pic_whitedams <- readPNG('./pics/whitedams.png')
-plot_whitedams <- ggplot(data_clean%>%filter(species=="whitedams"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_acantho, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of whitedams")
+plot_whitedams <- ggplot(data_clean%>%filter(species=="whitedams"),aes(x=treatment,y=mean_activity, fill=treatment))+annotation_raster(pic_whitedams, -Inf, Inf, -Inf, Inf)+geom_col(alpha = 0.6)+ggtitle("mean activity of whitedams")
 ggsave('./output/figures/mean activity of whitedams.png', )
 ```
 
@@ -311,6 +311,8 @@ only_statistics_table <- data.frame(
 species_statistics_table <- only_statistics_table %>% mutate(species = c("acantho","ambon","chromis","humbug","lemon","whitedams")) %>% select(species,t,df,p_value)
 
 species_statistics_flextable <- flextable(species_statistics_table)
+species_statistics_flextable
+## From the output of t test, we can observe that only humbug and lemon are significantly shown their level of activity are affected by CO2. And as the mean of CO2 increases, the mean of activity increases, indicating that higher concentration of CO2 may lead to higher level of activity.
 ```
 
 Now that you have a table, you can reference it within a document. For example, you can make a call to Table \@ref(tab:table1) by referring to the name of the code chunk. When you knit the html it will create a hyperlink to your table and insert a legend above the table for you. How cool is that!?
@@ -325,24 +327,111 @@ Moving forward on that you can also add in an object and whatever that objects v
 
 This is all **VERY** cool because that means if your code or data change than you can update your entire report very fast. It's also 100% reproducible. We know exactly where every single value in your report comes from. This is all pretty helpful when you want to check your code and report side-by-side. Now that you have a bit more detail fill in the following:
 
-Mean activity for `r "species name here"` in the control group was `r "add code to place mean for control"` (s / min) compared to the OA treatment group, which was `r "mean for acidificaton treatment"` (s / min). The difference between control and OA treatment means was `r "code mean difference bw treatment"` (s / min) (95% CI: `r "code for lower CI"` to `r "code for upper CI"`). 
+Mean activity for `r "lemon"` in the control group was `r "lemon_t_test$estimate[2]"` (s / min) compared to the OA treatment group, which was `r "lemon_t_test$estimate[1]"` (s / min). The difference between control and OA treatment means was `r "lemon_t_test$estimate[2]-lemon_t_test$estimate[1]"` (s / min) (95% CI: `r "lemon_t_test$conf.int[1]"` to `r "lemon_t_test$conf.int[2]"`). 
 
 Now, using what you just learnt, describe what the null hypothesis being tested was and provide statistical evidence (t-statistic, df, and p-value) to support your conclusion about whether we can reject the null hypothesis. Again, make sure you use in-line code. Write you answer below:
 
 **Write your answer here**
 
+Null hypothesis: There is no difference between the level of activity of control group and OA treatment group for species lemon.
+
+We can get `r "lemon_t_test$statistic"` and `r "lemon_t_test$parameter"` from the outcome and the p value is smaller than 0.05, indicating that we can reject the null hypothesis.
 
 Re-analyse the data for a single species using permutations instead of a t-test. Do your results differ?
 
 >**Stretch Task**:  If you really want a challenge try doing permutation tests for each species. Again, loops, functions or tidyverse (or even combinations might help). 
 
 ```{r, stretch2, echo=TRUE, eval=FALSE}
-# Add your code here.
+# acantho
+n_reps <- 100
+samp_dist_acantho <- rep(0,n_reps)
+acantho <- data_no_irrelevant_columns%>%filter(species=="acantho")
+for (i in 1:n_reps)
+{
+    permuted_acantho <- acantho %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_acantho <- t.test(permuted_acantho$activity[which(permuted_acantho$treatment=="CO2")],permuted_acantho$activity[which(permuted_acantho$treatment=="control")],var.equal=T)
+    samp_dist_acantho[i] <- permuted_t_test_acantho$statistic
+}
+pvalue_tibble_acantho <- tibble(value = samp_dist_acantho,extreme = (abs(samp_dist_acantho) > abs(acantho_t_test$statistic)))
+permutation_pvalue_acantho <- sum(pvalue_tibble_acantho$extreme==T)/n_reps
+
+# ambon
+n_reps <- 100
+samp_dist_ambon <- rep(0,n_reps)
+ambon <- data_no_irrelevant_columns%>%filter(species=="ambon")
+for (i in 1:n_reps)
+{
+    permuted_ambon <- ambon %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_ambon <- t.test(permuted_ambon$activity[which(permuted_ambon$treatment=="CO2")],permuted_ambon$activity[which(permuted_ambon$treatment=="control")],var.equal=T)
+    samp_dist_ambon[i] <- permuted_t_test_ambon$statistic
+}
+pvalue_tibble_ambon <- tibble(value = samp_dist_ambon,extreme = (abs(samp_dist_ambon) > abs(ambon_t_test$statistic)))
+permutation_pvalue_ambon <- sum(pvalue_tibble_ambon$extreme==T)/n_reps
+
+# chromis
+n_reps <- 100
+samp_dist_chromis <- rep(0,n_reps)
+chromis <- data_no_irrelevant_columns%>%filter(species=="chromis")
+for (i in 1:n_reps)
+{
+    permuted_chromis <- chromis %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_chromis <- t.test(permuted_chromis$activity[which(permuted_chromis$treatment=="CO2")],permuted_chromis$activity[which(permuted_chromis$treatment=="control")],var.equal=T)
+    samp_dist_chromis[i] <- permuted_t_test_chromis$statistic
+}
+pvalue_tibble_chromis <- tibble(value = samp_dist_chromis,extreme = (abs(samp_dist_chromis) > abs(chromis_t_test$statistic)))
+permutation_pvalue_chromis <- sum(pvalue_tibble_chromis$extreme==T)/n_reps
+
+# humbug
+n_reps <- 100
+samp_dist_humbug <- rep(0,n_reps)
+humbug <- data_no_irrelevant_columns%>%filter(species=="humbug")
+for (i in 1:n_reps)
+{
+    permuted_humbug <- humbug %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_humbug <- t.test(permuted_humbug$activity[which(permuted_humbug$treatment=="CO2")],permuted_humbug$activity[which(permuted_humbug$treatment=="control")],var.equal=T)
+    samp_dist_humbug[i] <- permuted_t_test_humbug$statistic
+}
+pvalue_tibble_humbug <- tibble(value = samp_dist_humbug,extreme = (abs(samp_dist_humbug) > abs(humbug_t_test$statistic)))
+permutation_pvalue_humbug <- sum(pvalue_tibble_humbug$extreme==T)/n_reps
+
+# lemon
+n_reps <- 100
+samp_dist_lemon <- rep(0,n_reps)
+lemon <- data_no_irrelevant_columns%>%filter(species=="lemon")
+for (i in 1:n_reps)
+{
+    permuted_lemon <- lemon %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_lemon <- t.test(permuted_lemon$activity[which(permuted_lemon$treatment=="CO2")],permuted_lemon$activity[which(permuted_lemon$treatment=="control")],var.equal=T)
+    samp_dist_lemon[i] <- permuted_t_test_lemon$statistic
+}
+pvalue_tibble_lemon <- tibble(value = samp_dist_lemon,extreme = (abs(samp_dist_lemon) > abs(lemon_t_test$statistic)))
+permutation_pvalue_lemon <- sum(pvalue_tibble_lemon$extreme==T)/n_reps
+
+# whitedams
+n_reps <- 100
+samp_dist_whitedams <- rep(0,n_reps)
+whitedams <- data_no_irrelevant_columns%>%filter(species=="whitedams")
+for (i in 1:n_reps)
+{
+    permuted_whitedams <- whitedams %>% mutate(activity = activity[sample(row_number())])
+    permuted_t_test_whitedams <- t.test(permuted_whitedams$activity[which(permuted_whitedams$treatment=="CO2")],permuted_whitedams$activity[which(permuted_whitedams$treatment=="control")],var.equal=T)
+    samp_dist_whitedams[i] <- permuted_t_test_whitedams$statistic
+}
+pvalue_tibble_whitedams <- tibble(value = samp_dist_whitedams,extreme = (abs(samp_dist_whitedams) > abs(whitedams_t_test$statistic)))
+permutation_pvalue_whitedams <- sum(pvalue_tibble_whitedams$extreme==T)/n_reps
+
+# make a table for comparison
+table_p_t_results <- data.frame(
+  pvalues_from_permutation_test = c(permutation_pvalue_acantho,permutation_pvalue_ambon,permutation_pvalue_chromis,permutation_pvalue_humbug,permutation_pvalue_lemon,permutation_pvalue_whitedams),
+  pvalues_from_t_test = c(acantho_t_test$p.value,ambon_t_test$p.value,chromis_t_test$p.value,humbug_t_test$p.value,lemon_t_test$p.value,whitedams_t_test$p.value))
+table_p_t_results <- table_p_t_results %>% mutate(species = c("acantho","ambon","chromis","humbug","lemon","whitedams")) %>% select(species,pvalues_from_permutation_test,pvalues_from_t_test)
 ```
 
 Below. Add a few sentences for the species (or multiple species) you talked about above to describe the permutation results:
 
 **Add your text and inline code chunks here**
+The p-values from permutation test are similar to the p-values from t tests except for species humbug and lemon. This outcome well supports the previous conclusion that in these two species, there is difference of level of activity caused by treatment, while in other species, the treatment causes no differences.
+
 
 # **Task 10**
 
